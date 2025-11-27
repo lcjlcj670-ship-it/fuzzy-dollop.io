@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Photo Editor</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Menu Bar -->
+    <nav class="top-menu">
+        <div class="menu-left">
+            <div class="logo">
+                <h1>Photo Editor</h1>
+            </div>
+            <div class="menu-items">
+                <div class="menu-item dropdown">
+                    <span data-translate="file">File</span>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" onclick="fileActions.newFile()">
+                            <span data-translate="new">New</span>
+                            <span class="shortcut">Ctrl+N</span>
+                        </div>
+                        <div class="dropdown-item" onclick="fileActions.openFile()">
+                            <span data-translate="open">Open</span>
+                            <span class="shortcut">Ctrl+O</span>
+                        </div>
+                        <div class="dropdown-item" onclick="fileActions.saveFile()">
+                            <span data-translate="save">Save</span>
+                            <span class="shortcut">Ctrl+S</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="fileActions.exportFile()">
+                            <span data-translate="export">Export</span>
+                            <span class="shortcut">Ctrl+E</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item dropdown">
+                    <span data-translate="edit">Edit</span>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" onclick="editActions.undo()">
+                            <span data-translate="undo">Undo</span>
+                            <span class="shortcut">Ctrl+Z</span>
+                        </div>
+                        <div class="dropdown-item" onclick="editActions.redo()">
+                            <span data-translate="redo">Redo</span>
+                            <span class="shortcut">Ctrl+Y</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item" onclick="editActions.copy()">
+                            <span data-translate="copy">Copy</span>
+                            <span class="shortcut">Ctrl+C</span>
+                        </div>
+                        <div class="dropdown-item" onclick="editActions.paste()">
+                            <span data-translate="paste">Paste</span>
+                            <span class="shortcut">Ctrl+V</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item dropdown">
+                    <span data-translate="image">Image</span>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" onclick="imageActions.adjustSize()">
+                            <span data-translate="canvasSize">Canvas Size</span>
+                        </div>
+                        <div class="dropdown-item" onclick="imageActions.rotateCanvas()">
+                            <span data-translate="rotate">Rotate</span>
+                        </div>
+                        <div class="dropdown-item" onclick="imageActions.flipHorizontal()">
+                            <span data-translate="flipHorizontal">Flip Horizontal</span>
+                        </div>
+                        <div class="dropdown-item" onclick="imageActions.flipVertical()">
+                            <span data-translate="flipVertical">Flip Vertical</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item dropdown">
+                    <span data-translate="filters">Filters</span>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" onclick="filterActions.brightness()">
+                            <span data-translate="brightness">Brightness</span>
+                        </div>
+                        <div class="dropdown-item" onclick="filterActions.contrast()">
+                            <span data-translate="contrast">Contrast</span>
+                        </div>
+                        <div class="dropdown-item" onclick="filterActions.saturation()">
+                            <span data-translate="saturation">Saturation</span>
+                        </div>
+                        <div class="dropdown-item" onclick="filterActions.blur()">
+                            <span data-translate="blur">Blur</span>
+                        </div>
+                        <div class="dropdown-item" onclick="filterActions.sharpen()">
+                            <span data-translate="sharpen">Sharpen</span>
+                        </div>
+                        <div class="dropdown-item" onclick="filterActions.grayscale()">
+                            <span data-translate="grayscale">Grayscale</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu-right">
+            <!-- Theme Toggle -->
+            <div class="theme-toggle" onclick="themeManager.toggleTheme()" title="Toggle Theme">
+                <svg class="theme-icon sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="theme-icon moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </div>
+
+            <!-- History Button -->
+            <button class="menu-item" onclick="historyManager.toggleHistory()" title="Edit History">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 7 7 1 1 0 0 0-2 0 5 5 0 1 0-5-5H2a1 1 0 0 0 0 2h1a7 7 0 1 0 7-7V3z"/>
+                </svg>
+                <span data-translate="history">History</span>
+            </button>
+
+            <!-- Language Selector -->
+            <div class="language-selector">
+                <select id="languageSelect" onchange="languageManager.switchLanguage(this.value)">
+                    <option value="en">EN</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+
+            <!-- User Menu -->
+            <div class="user-menu" id="userMenu">
+                <div class="user-button" onclick="userManager.toggleUserMenu()" id="userButton">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span class="user-name" id="userName" data-translate="login">Login</span>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-item" onclick="userManager.showProfile()">
+                        <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <span data-translate="profile">Profile</span>
+                    </div>
+                    <div class="dropdown-item" onclick="historyManager.showHistory()">
+                        <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 7 7 1 1 0 0 0-2 0 5 5 0 1 0-5-5H2a1 1 0 0 0 0 2h1a7 7 0 1 0 7-7V3z"/>
+                        </svg>
+                        <span data-translate="editHistory">Edit History</span>
+                    </div>
+                    <div class="dropdown-item" onclick="userManager.showSettings()">
+                        <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                        </svg>
+                        <span data-translate="settings">Settings</span>
+                    </div>
+                    <div class="dropdown-divider" style="border-top: 1px solid var(--border-light); margin: var(--space-sm) 0;"></div>
+                    <div class="dropdown-item" onclick="userManager.logout()" id="logoutItem" style="display: none;">
+                        <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 0.9-2 2v14c0 1.1 0.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                        <span data-translate="logout">Logout</span>
+                    </div>
+                    <div class="dropdown-item" onclick="userManager.showLogin()" id="loginItem">
+                        <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/>
+                        </svg>
+                        <span data-translate="login">Login</span>
+                    </div>
+                    <div class="dropdown-item" onclick="userManager.showRegister()" id="registerItem">
+                        <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15,12c2.21,0,4-1.79,4-4s-1.79-4-4-4c-1.76,0-3.41,0.81-4.46,2.09L9.88,7.91C10.27,8.63,11.67,10,15,10 c1.99,0,3.61-1.06,4.36-2.57H17v-2h-2C15.49,7.43,15,8.18,15,9c0,2.21,1.79,4,4,4z"/>
+                        </svg>
+                        <span data-translate="register">Register</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Left Toolbar -->
+        <aside class="toolbar">
+            <div class="tool-group" id="toolGroup1">
+                <div class="tool-button active" data-tool="select" onclick="toolManager.selectTool('select')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2 2l20 10L2 22V2z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="selectTool">Select Tool</span>
+                </div>
+                <div class="tool-button" data-tool="move" onclick="toolManager.selectTool('move')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l4 4-4 4-4-4 4-4zm0 12l-4-4 4-4 4 4-4 4z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="moveTool">Move Tool</span>
+                </div>
+            </div>
+            
+            <div class="tool-group" id="toolGroup2">
+                <div class="tool-button" data-tool="brush" onclick="toolManager.selectTool('brush')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2 22l6-2 10-10-4-4L4 16l-2 6zM15 5l2 2"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="brushTool">Brush Tool</span>
+                </div>
+                <div class="tool-button" data-tool="eraser" onclick="toolManager.selectTool('eraser')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16.24 7.76L6.83 17.17l-1.41 1.41L7.76 19.01l9.48-9.48-1.41-1.41zM2 20h12v2H2v-2z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="eraserTool">Eraser Tool</span>
+                </div>
+                <div class="tool-button" data-tool="fill" onclick="toolManager.selectTool('fill')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="fillTool">Fill Tool</span>
+                </div>
+            </div>
+
+            <div class="tool-group" id="toolGroup3">
+                <div class="tool-button" data-tool="rectangle" onclick="toolManager.selectTool('rectangle')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="rectangleTool">Rectangle Tool</span>
+                </div>
+                <div class="tool-button" data-tool="circle" onclick="toolManager.selectTool('circle')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="circleTool">Circle Tool</span>
+                </div>
+                <div class="tool-button" data-tool="lasso" onclick="toolManager.selectTool('lasso')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="lassoTool">Lasso Tool</span>
+                </div>
+            </div>
+
+            <div class="tool-group" id="toolGroup4">
+                <div class="tool-button" data-tool="text" onclick="toolManager.selectTool('text')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M5 4v3h5.5v12h3V7H19V4z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="textTool">Text Tool</span>
+                </div>
+                <div class="tool-button" data-tool="crop" onclick="toolManager.selectTool('crop')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 7h7V3H5v4h2V7zm0 10h7v4H5v-4h2v0zm9-10v7h4V5h-7v2h3zm0 14v-7h-4v7h7v-2h-3z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="cropTool">Crop Tool</span>
+                </div>
+                <div class="tool-button" data-tool="zoom" onclick="toolManager.selectTool('zoom')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                    <span class="tool-tooltip" data-translate="zoomTool">Zoom Tool</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <div class="canvas-container">
+                <canvas id="mainCanvas" width="800" height="600"></canvas>
+                <div class="canvas-overlay" id="canvasOverlay">
+                    <div class="drop-zone" id="dropZone">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM3 16.25V18.5h18V16.25A3.75 3.75 0 0 0 17.25 12.5h-12A3.75 3.75 0 0 0 1.5 16.25h1.5z"/>
+                        </svg>
+                        <p data-translate="dropImage">Drop image here or click to upload</p>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panels -->
+        <aside class="panels">
+            <!-- Layer Panel -->
+            <div class="panel layer-panel">
+                <div class="panel-header">
+                    <h3 data-translate="layers">Layers</h3>
+                    <button class="panel-button" onclick="layerActions.addLayer()">+</button>
+                </div>
+                <div class="layer-list" id="layerList">
+                    <div class="layer-item active">
+                        <div class="layer-thumbnail"></div>
+                        <span class="layer-name">Background</span>
+                        <button class="layer-visible" onclick="layerActions.toggleVisibility(this)">👁</button>
+                    </div>
+                </div>
+                <div class="layer-controls">
+                    <div class="control-group">
+                        <label data-translate="opacity">Opacity</label>
+                        <input type="range" min="0" max="100" value="100" class="slider" id="layerOpacity">
+                    </div>
+                    <div class="control-group">
+                        <label data-translate="blendMode">Blend Mode</label>
+                        <select id="blendMode">
+                            <option value="normal">Normal</option>
+                            <option value="multiply">Multiply</option>
+                            <option value="screen">Screen</option>
+                            <option value="overlay">Overlay</option>
+                            <option value="soft-light">Soft Light</option>
+                            <option value="hard-light">Hard Light</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Properties Panel -->
+            <div class="panel properties-panel">
+                <div class="panel-header">
+                    <h3 data-translate="properties">Properties</h3>
+                </div>
+                <div class="properties-content" id="propertiesContent">
+                    <!-- Tool Properties will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- History Panel -->
+            <div class="panel history-panel">
+                <div class="panel-header">
+                    <h3 data-translate="history">History</h3>
+                    <button class="panel-button" onclick="historyActions.clear()">🗑</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-item active">Initial State</div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Bottom Status Bar -->
+    <footer class="status-bar">
+        <div class="status-left">
+            <span id="canvasSize" data-translate="canvasSizeLabel">Canvas: 800 × 600</span>
+            <span id="zoomLevel" data-translate="zoomLabel">100%</span>
+        </div>
+        <div class="status-right">
+            <span data-translate="ready">Ready</span>
+        </div>
+    </footer>
+
+    <!-- Color Picker Modal -->
+    <div class="modal" id="colorPickerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-translate="colorPicker">Color Picker</h3>
+                <button class="modal-close" onclick="closeModal('colorPickerModal')">&times;</button>
+            </div>
+            <div class="color-picker">
+                <div class="color-samples" id="colorSamples">
+                    <!-- Color samples will be populated -->
+                </div>
+                <div class="color-inputs">
+                    <div class="color-input-group">
+                        <label>Hex:</label>
+                        <input type="text" id="hexColor" value="#000000">
+                    </div>
+                    <div class="color-input-group">
+                        <label>RGB:</label>
+                        <input type="number" id="rgbR" min="0" max="255" value="0">
+                        <input type="number" id="rgbG" min="0" max="255" value="0">
+                        <input type="number" id="rgbB" min="0" max="255" value="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Text Editor Modal -->
+    <div class="modal" id="textEditorModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-translate="textEditor">Text Editor</h3>
+                <button class="modal-close" onclick="closeModal('textEditorModal')">&times;</button>
+            </div>
+            <div class="text-editor">
+                <div class="text-input-group">
+                    <label data-translate="text">Text:</label>
+                    <textarea id="textContent" placeholder="Enter your text here..."></textarea>
+                </div>
+                <div class="text-style-group">
+                    <div class="text-input-row">
+                        <label data-translate="fontSize">Font Size:</label>
+                        <input type="number" id="fontSize" value="24" min="8" max="200">
+                    </div>
+                    <div class="text-input-row">
+                        <label data-translate="fontFamily">Font Family:</label>
+                        <select id="fontFamily">
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Georgia">Georgia</option>
+                        </select>
+                    </div>
+                    <div class="text-input-row">
+                        <label data-translate="textColor">Text Color:</label>
+                        <input type="color" id="textColor" value="#000000">
+                        <button class="color-picker-btn" onclick="openColorPicker()">🎨</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="applyText()" data-translate="apply">Apply</button>
+                    <button class="btn btn-secondary" onclick="closeModal('textEditorModal')" data-translate="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" data-translate="login">Login</h2>
+                <button class="modal-close" onclick="userManager.closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-container">
+                    <div class="form-group">
+                        <label class="form-label" data-translate="emailOrUsername">邮箱或用户名</label>
+                        <input type="text" class="form-input" id="loginEmail" placeholder="输入邮箱或用户名">
+                        <small style="color: var(--text-tertiary); font-size: 0.85rem;" data-translate="adminLoginHint">提示：管理员账户可用 lcjlcj670 登录</small>
+                        <div class="form-error" id="loginEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="password">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password">
+                        <div class="form-error" id="loginPasswordError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: var(--space-sm);">
+                            <input type="checkbox" id="rememberMe">
+                            <span data-translate="rememberMe">记住我</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="userManager.closeModal('loginModal')" data-translate="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="userManager.login()" id="loginBtn" data-translate="login">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" data-translate="register">Register</h2>
+                <button class="modal-close" onclick="userManager.closeModal('registerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-container">
+                    <div class="form-group">
+                        <label class="form-label" data-translate="username">Username</label>
+                        <input type="text" class="form-input" id="registerUsername" placeholder="Choose a username">
+                        <div class="form-error" id="registerUsernameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="email">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" placeholder="Enter your email">
+                        <div class="form-error" id="registerEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="password">Password</label>
+                        <input type="password" class="form-input" id="registerPassword" placeholder="Choose a password">
+                        <div class="form-error" id="registerPasswordError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-input" id="registerConfirmPassword" placeholder="Confirm your password">
+                        <div class="form-error" id="registerConfirmPasswordError"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="userManager.closeModal('registerModal')" data-translate="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="userManager.register()" id="registerBtn" data-translate="register">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" data-translate="profile">Profile</h2>
+                <button class="modal-close" onclick="userManager.closeModal('profileModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-container">
+                    <div class="form-group">
+                        <label class="form-label" data-translate="username">Username</label>
+                        <input type="text" class="form-input" id="profileUsername" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="email">Email</label>
+                        <input type="email" class="form-input" id="profileEmail" placeholder="Enter your email" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="bio">Bio</label>
+                        <textarea class="form-input" id="profileBio" placeholder="Tell us about yourself..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="preferences">Preferences</label>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+                            <label style="display: flex; align-items: center; gap: var(--space-sm);">
+                                <input type="checkbox" id="autoSave">
+                                <span data-translate="autoSave">Auto save work</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-sm);">
+                                <input type="checkbox" id="showTooltips">
+                                <span data-translate="showTooltips">Show tooltips</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="userManager.closeModal('profileModal')" data-translate="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="userManager.saveProfile()" data-translate="save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" data-translate="settings">Settings</h2>
+                <button class="modal-close" onclick="userManager.closeModal('settingsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-container">
+                    <div class="form-group">
+                        <label class="form-label" data-translate="theme">Theme</label>
+                        <select class="form-input" id="themeSelect" onchange="themeManager.setTheme(this.value)">
+                            <option value="light" data-translate="lightTheme">Light Theme</option>
+                            <option value="dark" data-translate="darkTheme">Dark Theme</option>
+                            <option value="auto" data-translate="autoTheme">Auto (System)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="language">Language</label>
+                        <select class="form-input" id="settingsLanguageSelect" onchange="languageManager.switchLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="canvasDefaults">Canvas Defaults</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm);">
+                            <div>
+                                <label data-translate="width" style="font-size: var(--font-size-sm);">Width</label>
+                                <input type="number" class="form-input" id="defaultWidth" value="800" min="100" max="4000">
+                            </div>
+                            <div>
+                                <label data-translate="height" style="font-size: var(--font-size-sm);">Height</label>
+                                <input type="number" class="form-input" id="defaultHeight" value="600" min="100" max="4000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-translate="shortcuts">Keyboard Shortcuts</label>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+                            <button class="btn btn-secondary" onclick="settingsManager.resetShortcuts()" data-translate="resetShortcuts">Reset Shortcuts</button>
+                            <button class="btn btn-secondary" onclick="settingsManager.exportSettings()" data-translate="exportSettings">Export Settings</button>
+                            <button class="btn btn-secondary" onclick="settingsManager.importSettings()" data-translate="importSettings">Import Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="userManager.closeModal('settingsModal')" data-translate="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="settingsManager.saveSettings()" data-translate="save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced History Panel -->
+    <div class="history-panel" id="historyPanel">
+        <div class="history-header">
+            <h3 class="history-title" data-translate="editHistory">Edit History</h3>
+            <button class="history-close" onclick="historyManager.toggleHistory()">&times;</button>
+        </div>
+        <div class="history-content" id="historyContent">
+            <div class="history-item" onclick="historyManager.restoreToStart()">
+                <div class="history-thumbnail">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div class="history-info">
+                    <div class="history-name" data-translate="newDocument">New Document</div>
+                    <div class="history-date" id="historyDate0">Just now</div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid var(--border-light);">
+            <button class="btn btn-secondary" onclick="historyManager.clearHistory()" data-translate="clearAll">Clear All</button>
+            <button class="btn btn-danger" onclick="historyManager.deleteSelected()" data-translate="deleteSelected">Delete Selected</button>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script src="js/main.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/tools.js"></script>
+    <script src="js/layers.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/notifications.js"></script>
+    <script>
+        // Initialize enhanced features after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all managers
+            if (window.themeManager) themeManager.init();
+            if (window.userManager) userManager.init();
+            if (window.historyManager) historyManager.init();
+            if (window.settingsManager) settingsManager.init();
+            if (window.notificationManager) notificationManager.init();
+            
+            // Initialize photo editor
+            if (window.photoEditor) {
+                window.photoEditor.init();
+            // Debug: Check if photoEditor is properly initialized
+            setTimeout(() => {
+                if (window.photoEditor) {
+                    console.log('✅ PhotoEditor initialized successfully');
+                    console.log('Canvas element:', window.photoEditor.canvas);
+                    console.log('Context:', window.photoEditor.ctx);
+                    
+                    // Test canvas drawing
+                    if (window.photoEditor.canvas && window.photoEditor.ctx) {
+                        window.photoEditor.ctx.fillStyle = '#ff0000';
+                        window.photoEditor.ctx.fillRect(50, 50, 100, 100);
+                        console.log('✅ Canvas test drawing successful');
+                    }
+                } else {
+                    console.error('❌ PhotoEditor not initialized');
+                }
+                
+                // Check file input
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput) {
+                    console.log('✅ File input found');
+                    console.log('File input events:', getEventListeners(fileInput));
+                } else {
+                    console.error('❌ File input not found');
+                }
+                
+                // Check drop zone
+                const dropZone = document.getElementById('dropZone');
+                if (dropZone) {
+                    console.log('✅ Drop zone found');
+                } else {
+                    console.error('❌ Drop zone not found');
+                }
+                
+            }, 1000);
+    
+            }
+            
+            // Bind file input events
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    if (window.photoEditor) {
+                        window.photoEditor.handleFileSelect(e);
+                    }
+                });
+            }
+            
+            // Show welcome message
+            setTimeout(() => {
+                notificationManager.show(
+                    'Welcome to the enhanced Photo Editor! 🎨', 
+                    'success', 
+                    4000,
+                    { title: 'Photo Editor Enhanced' }
+                );
+            }, 1000);
+            
+            // Request notification permission
+            notificationManager.requestNotificationPermission();
+            
+            // Add some sample history entries to demonstrate functionality
+            setTimeout(() => {
+                historyManager.addToHistory('Applied brightness filter', 'filter');
+                historyManager.addToHistory('Added text layer', 'layer');
+                historyManager.addToHistory('Adjusted canvas size', 'canvas');
+            }, 2000);
+        });
+        
+        // Global error handler for better debugging
+        window.addEventListener('error', function(e) {
+            console.error('Application error:', e.error);
+            if (window.notificationManager) {
+                notificationManager.show(
+                    'An unexpected error occurred. Please refresh the page if problems persist.',
+                    'error',
+                    8000
+                );
+            }
+        });
+    </script>
+</body>
+</html>

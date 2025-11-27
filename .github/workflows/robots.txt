@@ -1,0 +1,19 @@
+# Robots.txt for Free Photo Editor
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://photoeditor-free.com/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Disallow admin areas (if any)
+Disallow: /admin/
+Disallow: /private/
+
+# Allow all important pages
+Allow: /
+Allow: /editor
+Allow: /features
+Allow: /faq

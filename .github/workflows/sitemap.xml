@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+    
+    <!-- Homepage -->
+    <url>
+        <loc>https://photoeditor-free.com/</loc>
+        <lastmod>2024-11-22</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://photoeditor-free.com/images/photo-editor-preview.jpg</image:loc>
+            <image:title>Free Online Photo Editor Interface</image:title>
+            <image:caption>Professional photo editing tool with crop, resize, and filter capabilities</image:caption>
+        </image:image>
+    </url>
+    
+    <!-- Editor Page -->
+    <url>
+        <loc>https://photoeditor-free.com/editor</loc>
+        <lastmod>2024-11-22</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://photoeditor-free.com/images/editor-interface.jpg</image:loc>
+            <image:title>Photo Editor Interface</image:title>
+            <image:caption>Advanced online photo editing interface</image:caption>
+        </image:image>
+    </url>
+    
+    <!-- Features Page -->
+    <url>
+        <loc>https://photoeditor-free.com/features</loc>
+        <lastmod>2024-11-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- FAQ Page -->
+    <url>
+        <loc>https://photoeditor-free.com/faq</loc>
+        <lastmod>2024-11-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+</urlset>
